@@ -192,10 +192,10 @@ def run(hook, now=None, fetch=None, send=deliver, state_path=STATE_PATH, max_fil
     rep={'feed_entries':0,'new_filings':0,'parsed':0,'purchases':0,'posted':0,'below_min':0,'not_top':0,'errors':[]}
     entries=[]
     for p in range(FEED_PAGES):
-        try: page=feed_entries(fetch(FEED%(p*100)))
+        try: body=fetch(FEED%(p*100)); page=feed_entries(body)
         except Exception as e: rep['errors'].append('feed page %d: %s'%(p,type(e).__name__)); break
         entries+=page
-        if len(page)<20: break
+        if '<entry' not in body: break   # past the end of the feed (pages also hold non-Form-4 filings, so count raw entries)
     rep['feed_entries']=len(entries)
     fresh=[(a,c,l) for a,c,l in entries if a not in state['seen']][:max_filings]; rep['new_filings']=len(fresh)
     out=[]
