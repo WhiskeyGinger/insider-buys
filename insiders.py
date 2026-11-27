@@ -212,12 +212,20 @@ def run(hook, now=None, fetch=None, send=deliver, state_path=STATE_PATH, max_fil
             if b['value']<MIN_VALUE: rep['below_min']+=1; continue
             if not is_top(b['owner']): rep['not_top']+=1; continue
             url=folder+acc+'-index.htm'
-            state['buys'].append({'at':now.isoformat(),'owner':b['owner']['name'],'cik':b['issuer']['cik'],'ticker':b['issuer']['ticker'],'value':b['value']})
+            state['buys'].append({'at':now.isoformat(),'owner':b['owner']['name'],'cik':b['issuer']['cik'],'ticker':b['issuer']['ticker'],'value':b['value'],
+                                  'company':b['issuer']['name'],'role':role(b['owner']),'date':b.get('last_date'),'url':url})
             out.append(embed(b,now.date().isoformat(),url,cluster_count(state,b['issuer']['ticker'],b['issuer']['cik'],now)))
     for i in range(0,len(out),9):
         if send(hook,message(out[i:i+9])): rep['posted']+=len(out[i:i+9])
     rep['requests']=getattr(fetch,'calls',None)
     save_state(state,now,state_path); return rep
+
+def recap_data(state, now, days=8):
+    """Posted buys from the last `days` days, for the weekly recap (published to this repo's `data` branch)."""
+    since=(now-dt.timedelta(days=days)).isoformat()
+    rows=[{k:b.get(k) for k in ('at','owner','role','company','ticker','value','date','url')} for b in state['buys'] if b['at']>=since and b.get('company')]
+    for r in rows: r['insiders']=len({x['owner'] for x in state['buys'] if x.get('ticker')==r['ticker'] and r['ticker'] and x['at']>=since})
+    return {'kind':'insider-buys','buys':sorted(rows,key=lambda r:-(r['value'] or 0))}
 
 def sample(now):
     b={'issuer':{'cik':'1','name':'Example Industries','ticker':'EXMP'},'owner':{'name':'Jane Example','director':False,'officer':True,'ten_pct':False,'title':'Chief Executive Officer'},
@@ -241,5 +249,6 @@ def main():
     if not os.environ.get('SEC_CONTACT'): print('warning: SEC_CONTACT not set; the SEC may refuse requests without a contact e-mail')
     if mode=='sample': ok=deliver(hook,sample(dt.datetime.now(dt.timezone.utc))); print('sample delivered' if ok else 'sample failed'); sys.exit(0 if ok else 1)
     rep=run(hook); print(json.dumps(rep))
+    Path('recap.json').write_text(json.dumps(recap_data(load_state(),dt.datetime.now(dt.timezone.utc)),indent=1,sort_keys=True))
     if rep['errors'] and not rep['feed_entries']: sys.exit('Could not read the SEC feed: '+'; '.join(rep['errors'][:3]))
 if __name__=='__main__': main()

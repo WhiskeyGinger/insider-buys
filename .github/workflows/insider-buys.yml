@@ -7,6 +7,8 @@ on:
       mode:
         description: run, sample, or probe
         default: run
+permissions:
+  contents: write
 concurrency: { group: insider-buys, cancel-in-progress: false }
 jobs:
   scan:
@@ -34,3 +36,15 @@ jobs:
         with:
           path: .state
           key: insider-state-${{ github.run_id }}
+      - name: Publish weekly-recap data
+        if: success() && (inputs.mode || 'run') == 'run'
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          [ -f recap.json ] || exit 0
+          curl -sf https://raw.githubusercontent.com/${{ github.repository }}/data/recap.json -o /tmp/old.json || true
+          cmp -s recap.json /tmp/old.json && { echo "recap data unchanged"; exit 0; }
+          d=$(mktemp -d); cp recap.json "$d"/; cd "$d"
+          git init -q -b data && git add recap.json
+          git -c user.name=github-actions -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -qm "Update weekly recap data"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" data

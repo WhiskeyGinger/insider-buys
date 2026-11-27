@@ -59,6 +59,7 @@ class Run(unittest.TestCase):
         self.assertIn('📈 Now owns 250,000 shares (+19%)',d); self.assertIn('How to read this',e[-1]['description'])
         self.assertIn('🔥 **2 insiders** bought ACME',e[1]['description'])
         self.assertEqual(I.run('H',NOW,self.fetch,self.send,self.p)['posted'],0)
+        r=I.recap_data(I.load_state(self.p),NOW)['buys']; self.assertEqual([(b['ticker'],b['role'],b['insiders']) for b in r],[('ACME','Chief Executive Officer',2),('ACME','Director',2)])
     def test_small_and_junior_buys_skipped(self):
         self.docs['000190000126000010']=form4(shares='100',price='10')
         self.docs['000190000226000003']=form4(owner='X',title='VP Sales',shares='10000',price='50')
