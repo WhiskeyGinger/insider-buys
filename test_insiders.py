@@ -13,8 +13,11 @@ FEED='''<?xml version="1.0" encoding="ISO-8859-1" ?>
 <entry><title>4 - Doe John (0001900002) (Reporting)</title>
 <link rel="alternate" type="text/html" href="https://www.sec.gov/Archives/edgar/data/1900002/000190000226000003/0001900002-26-000003-index.htm"/>
 <id>urn:tag:sec.gov,2008:accession-number=0001900002-26-000003</id></entry>
+<entry><title>424B2 - BIG BANK (0000999999) (Filer)</title>
+<link rel="alternate" type="text/html" href="https://www.sec.gov/Archives/edgar/data/999999/000099999926000001/0000999999-26-000001-index.htm"/>
+<id>urn:tag:sec.gov,2008:accession-number=0000999999-26-000001</id></entry>
 </feed>'''
-INDEX=json.dumps({'directory':{'item':[{'name':'0001900001-26-000010-index.htm'},{'name':'xslF345X05'},{'name':'wk-form4_1.xml'}]}})
+INDEX=json.dumps({'directory':{'item':[{'name':'0001900001-26-000010-index.htm'},{'name':'exfilingfees_htm.xml'},{'name':'xslF345X05'},{'name':'wk-form4_1.xml'}]}})
 def form4(owner='SMITH JANE',title='Chief Executive Officer',officer='1',director='0',code='P',ad='A',shares='40000',price='30.00',after='250000',ticker='ACME',plan='0'):
     return f'''<?xml version="1.0"?><ownershipDocument><documentType>4</documentType><aff10b5One>{plan}</aff10b5One>
 <issuer><issuerCik>0000123456</issuerCik><issuerName>ACME CORP</issuerName><issuerTradingSymbol>{ticker}</issuerTradingSymbol></issuer>

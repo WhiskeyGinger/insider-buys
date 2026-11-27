@@ -50,6 +50,7 @@ def feed_entries(xml_text):
     per reporting person and once for the issuer; the accession number identifies the filing."""
     out=[]; root=ET.fromstring(xml_text)
     for e in root.findall(ATOM+'entry'):
+        if not (e.findtext(ATOM+'title') or '').startswith('4 - '): continue   # the feed's type=4 also matches 424B etc.
         le=e.find(ATOM+'link'); link=le.get('href','') if le is not None else ''
         m=re.search(r'/data/(\d+)/(\d{18})/',link)
         acc=None
@@ -67,7 +68,7 @@ def feed_entries(xml_text):
 def primary_xml(index_json):
     """Name of the Form 4 XML document in a filing's index.json."""
     items=(json.loads(index_json).get('directory') or {}).get('item') or []
-    xmls=[i['name'] for i in items if str(i.get('name','')).lower().endswith('.xml') and not str(i.get('name','')).lower().startswith('xsl')]
+    xmls=[i['name'] for i in items if str(i.get('name','')).lower().endswith('.xml') and not str(i.get('name','')).lower().startswith(('xsl','exfiling','filingsummary'))]
     return xmls[0] if xmls else None
 
 # --- Form 4 ---------------------------------------------------------------------------------------------------------
@@ -230,9 +231,10 @@ def main():
     mode=os.environ.get('MODE','run')
     if mode=='probe':
         f=Fetcher(); body=f(FEED%0); es=feed_entries(body); print('feed entries',len(es),es[:2])
-        if es:
-            acc,cik,link=es[0]; folder=ARCHIVE%(cik,acc.replace('-','')); name=primary_xml(f(folder+'index.json')); print('xml',name)
-            if name: print('parsed',parse_form4(f(folder+name)))
+        for acc,cik,link in es[:6]:
+            folder=ARCHIVE%(cik,acc.replace('-','')); name=primary_xml(f(folder+'index.json'))
+            doc=f(folder+name) if name else ''
+            print(acc,name,'ownershipDocument' in doc,parse_form4(doc) if doc else None)
         return
     hook=os.environ.get('DISCORD_WEBHOOK_URL')
     if not hook: sys.exit('DISCORD_WEBHOOK_URL is not set (Settings → Secrets and variables → Actions)')
