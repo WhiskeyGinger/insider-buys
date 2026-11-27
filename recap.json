@@ -1,0 +1,104 @@
+{
+ "buys": [
+  {
+   "at": "2026-11-27T23:30:05.416155+00:00",
+   "company": "Destiny Tech100 Inc.",
+   "date": "2026-11-25",
+   "insiders": 1,
+   "owner": "Saba Capital Management, L.P.",
+   "role": "10% owner",
+   "ticker": "DXYZ",
+   "url": "https://www.sec.gov/Archives/edgar/data/1843974/000151028126000487/0001510281-26-000487-index.htm",
+   "value": 3947084.0000000005
+  },
+  {
+   "at": "2026-11-27T23:30:05.416155+00:00",
+   "company": "STANDARD BIOTOOLS INC.",
+   "date": "2026-11-27",
+   "insiders": 1,
+   "owner": "Casdin Partners Master Fund, L.P.",
+   "role": "Director",
+   "ticker": "LAB",
+   "url": "https://www.sec.gov/Archives/edgar/data/1919480/000091957426008286/0000919574-26-008286-index.htm",
+   "value": 2102438.4844
+  },
+  {
+   "at": "2026-11-27T23:30:05.416155+00:00",
+   "company": "BETA Technologies, Inc.",
+   "date": "2026-11-27",
+   "insiders": 1,
+   "owner": "Stone Michael Robert",
+   "role": "Director",
+   "ticker": "BETA",
+   "url": "https://www.sec.gov/Archives/edgar/data/2090370/000119312526480448/0001193125-26-480448-index.htm",
+   "value": 1601932.0
+  },
+  {
+   "at": "2026-11-27T21:48:12.076362+00:00",
+   "company": "Cheche Group Inc.",
+   "date": "2026-11-25",
+   "insiders": 1,
+   "owner": "Zhang Lei",
+   "role": "Chief Executive Officer",
+   "ticker": "CCG",
+   "url": "https://www.sec.gov/Archives/edgar/data/1965473/000149315226054493/0001493152-26-054493-index.htm",
+   "value": 1243200.0
+  },
+  {
+   "at": "2026-11-27T23:30:05.416155+00:00",
+   "company": "IES Holdings, Inc.",
+   "date": "2026-11-24",
+   "insiders": 1,
+   "owner": "Gendell David B.",
+   "role": "Director",
+   "ticker": "IESC",
+   "url": "https://www.sec.gov/Archives/edgar/data/1408176/000104826826000191/0001048268-26-000191-index.htm",
+   "value": 653000.0
+  },
+  {
+   "at": "2026-11-27T21:48:12.076362+00:00",
+   "company": "Quanterix Corp",
+   "date": "2026-11-24",
+   "insiders": 1,
+   "owner": "DONNELLY WILLIAM P",
+   "role": "Director",
+   "ticker": "QTRX",
+   "url": "https://www.sec.gov/Archives/edgar/data/1503274/000120792826000012/0001207928-26-000012-index.htm",
+   "value": 542500.0
+  },
+  {
+   "at": "2026-11-27T16:12:21.573169+00:00",
+   "company": "DONEGAL GROUP INC",
+   "date": "2026-11-25",
+   "insiders": 1,
+   "owner": "DONEGAL MUTUAL INSURANCE CO",
+   "role": "10% owner",
+   "ticker": "DGICA",
+   "url": "https://www.sec.gov/Archives/edgar/data/935596/000093559626000034/0000935596-26-000034-index.htm",
+   "value": 380819.0
+  },
+  {
+   "at": "2026-11-27T21:48:12.076362+00:00",
+   "company": "Skydance Corp",
+   "date": "2026-11-25",
+   "insiders": 1,
+   "owner": "Cardinale Gerald J.",
+   "role": "Director",
+   "ticker": "SKYD",
+   "url": "https://www.sec.gov/Archives/edgar/data/2041610/000089534526000510/0000895345-26-000510-index.htm",
+   "value": 149882.586
+  },
+  {
+   "at": "2026-11-27T23:30:05.416155+00:00",
+   "company": "ELLSWORTH GROWTH & INCOME FUND LTD",
+   "date": "2026-11-25",
+   "insiders": 1,
+   "owner": "Saba Capital Management, L.P.",
+   "role": "10% owner",
+   "ticker": "ECF",
+   "url": "https://www.sec.gov/Archives/edgar/data/1510281/000151028126000484/0001510281-26-000484-index.htm",
+   "value": 147823.54
+  }
+ ],
+ "kind": "insider-buys"
+}
