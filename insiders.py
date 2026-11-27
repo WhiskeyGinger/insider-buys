@@ -126,10 +126,13 @@ def load_state(path=STATE_PATH):
     except (OSError,ValueError): d={}
     d.setdefault('seen',{}); d.setdefault('buys',[]); return d
 
+HISTORY_DAYS=120
+
 def save_state(state, now, path=STATE_PATH):
     cutoff=(now-dt.timedelta(days=45)).isoformat()
     state['seen']={k:v for k,v in state['seen'].items() if v>=cutoff}
-    state['buys']=[b for b in state['buys'] if b['at']>=cutoff]
+    keep=(now-dt.timedelta(days=HISTORY_DAYS)).isoformat()      # longer, so the weekly recap can show how past alerts did
+    state['buys']=[b for b in state['buys'] if b['at']>=keep]
     Path(path).parent.mkdir(parents=True,exist_ok=True); Path(path).write_text(json.dumps(state,indent=1,sort_keys=True))
 
 def cluster_count(state, ticker, cik, now):
@@ -220,11 +223,14 @@ def run(hook, now=None, fetch=None, send=deliver, state_path=STATE_PATH, max_fil
     rep['requests']=getattr(fetch,'calls',None)
     save_state(state,now,state_path); return rep
 
-def recap_data(state, now, days=8):
-    """Posted buys from the last `days` days, for the weekly recap (published to this repo's `data` branch)."""
+def recap_data(state, now, days=HISTORY_DAYS):
+    """Posted buys from the last `days` days, for the weekly recap (published to this repo's `data` branch).
+    `insiders` counts distinct insiders who bought the same stock in the 30 days up to that buy."""
     since=(now-dt.timedelta(days=days)).isoformat()
     rows=[{k:b.get(k) for k in ('at','owner','role','company','ticker','value','date','url')} for b in state['buys'] if b['at']>=since and b.get('company')]
-    for r in rows: r['insiders']=len({x['owner'] for x in state['buys'] if x.get('ticker')==r['ticker'] and r['ticker'] and x['at']>=since})
+    for r in rows:
+        start=(dt.datetime.fromisoformat(r['at'])-dt.timedelta(days=CLUSTER_DAYS)).isoformat()
+        r['insiders']=len({x['owner'] for x in state['buys'] if r['ticker'] and x.get('ticker')==r['ticker'] and start<=x['at']<=r['at']}) or 1
     return {'kind':'insider-buys','buys':sorted(rows,key=lambda r:-(r['value'] or 0))}
 
 def sample(now):
