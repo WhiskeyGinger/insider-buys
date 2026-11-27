@@ -1,0 +1,31 @@
+name: Insider buys
+on:
+  schedule:
+    - cron: "17 12-23 * * 1-5"   # hourly, weekdays, ~7am–6pm Central
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: run, sample, or probe
+        default: run
+concurrency: { group: insider-buys, cancel-in-progress: false }
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python -m unittest
+      - uses: actions/cache/restore@v4
+        with: { path: .state, key: insider-state-${{ github.run_id }}, restore-keys: insider-state- }
+      - name: Scan SEC Form 4 filings
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SEC_CONTACT: ${{ secrets.SEC_CONTACT || vars.SEC_CONTACT }}
+          MIN_VALUE: ${{ vars.MIN_VALUE || '100000' }}
+          MODE: ${{ inputs.mode || 'run' }}
+        run: python insiders.py
+      - uses: actions/cache/save@v4
+        if: always()
+        with: { path: .state, key: insider-state-${{ github.run_id }} }
