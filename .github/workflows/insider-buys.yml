@@ -27,6 +27,7 @@ jobs:
       - name: Scan SEC Form 4 filings
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PING_ROLE_ID: ${{ vars.PING_ROLE_ID || '1575983076838735904' }}
           SEC_CONTACT: ${{ secrets.SEC_CONTACT || vars.SEC_CONTACT }}
           MIN_VALUE: ${{ vars.MIN_VALUE || '100000' }}
           MODE: ${{ inputs.mode || 'run' }}

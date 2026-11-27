@@ -176,7 +176,16 @@ def message(embeds):
     es=embeds[:9]; es.append({'description':HOW_TO_READ,'color':9807270})
     return {'username':'Insider Buy Alerts','allowed_mentions':{'parse':[]},'embeds':es}
 
+
+PING_ROLE_ID=os.environ.get('PING_ROLE_ID','').strip()   # 🔔 role members pick in onboarding; pinged on each post
+
+def with_ping(payload):
+    if PING_ROLE_ID.isdigit() and '<@&' not in (payload.get('content') or ''):
+        payload=dict(payload,content=('<@&%s> '%PING_ROLE_ID)+(payload.get('content') or ''),allowed_mentions={'parse':[],'roles':[PING_ROLE_ID]})
+    return payload
+
 def deliver(hook, payload, opener=urllib.request.urlopen, sleep=time.sleep, attempts=3):
+    payload=with_ping(payload)
     url=hook+('&' if '?' in hook else '?')+'wait=true'
     for a in range(attempts):
         try:
