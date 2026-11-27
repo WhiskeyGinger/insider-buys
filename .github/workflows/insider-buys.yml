@@ -18,7 +18,10 @@ jobs:
         with: { python-version: "3.12" }
       - run: python -m unittest
       - uses: actions/cache/restore@v4
-        with: { path: .state, key: insider-state-${{ github.run_id }}, restore-keys: insider-state- }
+        with:
+          path: .state
+          key: insider-state-${{ github.run_id }}
+          restore-keys: insider-state-
       - name: Scan SEC Form 4 filings
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -28,4 +31,6 @@ jobs:
         run: python insiders.py
       - uses: actions/cache/save@v4
         if: always()
-        with: { path: .state, key: insider-state-${{ github.run_id }} }
+        with:
+          path: .state
+          key: insider-state-${{ github.run_id }}
